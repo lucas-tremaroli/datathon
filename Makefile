@@ -1,7 +1,7 @@
 .PHONY: db kernel dash
 
 db:
-	duckdb data/datathon.db
+	duckdb data/raw/datathon.db -readonly
 
 kernel:
 	uv run python -m ipykernel install --user --name datathon
