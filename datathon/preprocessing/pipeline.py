@@ -1,7 +1,7 @@
-from datathon.db import Database
+from datathon.db import DuckDBClient
 from datathon.preprocessing.transformations import rename_columns
 
-def clean_and_store_refined_table(year: int, db: Database) -> None:
+def clean_and_store_refined_table(year: int, db: DuckDBClient) -> None:
     """
     Cleans the raw data for a given year and stores it as a refined table in the database.
 
@@ -20,7 +20,7 @@ def clean_and_store_refined_table(year: int, db: Database) -> None:
         create_table_query = f.read().format(year=year)
         db.execute_query(create_table_query, cleaned_data)
 
-def merge_refined_tables(db: Database) -> None:
+def merge_refined_tables(db: DuckDBClient) -> None:
     """
     Merges all refined tables into a single table for analysis.
 
@@ -35,7 +35,7 @@ def run_pipeline() -> None:
     """
     Runs the entire data preprocessing pipeline:
     """
-    with Database('data/duckdb/datathon.db') as db:
+    with DuckDBClient('data/duckdb/datathon.db') as db:
         # Clean and store refined tables for each year
         for year in range(2022, 2025):
             clean_and_store_refined_table(year, db)

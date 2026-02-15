@@ -1,9 +1,9 @@
 import altair as alt
 import streamlit as st
 
-from datathon.db import Database
+from datathon.db import DuckDBClient
 
-db = Database("data/duckdb/datathon.db")
+db = DuckDBClient("data/duckdb/datathon.db")
 
 school_query = open("data/queries/school.sql").read()
 school_df = db.execute_query(school_query)

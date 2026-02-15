@@ -1,9 +1,9 @@
 # %%
 
-from datathon.db import Database
+from datathon.db import DuckDBClient
 from datathon.preprocessing.columns import COLUMN_MAPPING
 
-with Database("../data/duckdb/datathon.db") as db:
+with DuckDBClient("../data/duckdb/datathon.db") as db:
       raw_data_2024 = db.fetch_table('raw_data_2024')
 
 refined_data_2024 = raw_data_2024.copy()

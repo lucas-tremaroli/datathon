@@ -2,7 +2,7 @@ import duckdb
 from pandas import DataFrame
 
 
-class Database:
+class DuckDBClient:
     def __init__(self, db_path: str, read_only: bool = False):
         self.conn = duckdb.connect(database=db_path, read_only=read_only)
 
