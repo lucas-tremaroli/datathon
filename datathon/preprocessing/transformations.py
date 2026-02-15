@@ -1,6 +1,6 @@
 import pandas as pd
 
-from datathon.preprocessing.columns import COLUMN_MAPPING
+from datathon.preprocessing.mapping import COLUMN_MAPPING
 
 def rename_columns(df: pd.DataFrame) -> pd.DataFrame:
     """
