@@ -1,5 +1,11 @@
 import pandas as pd
 
+from datathon.preprocessing.columns import COLUMN_MAPPING
+
+def rename_columns(df: pd.DataFrame) -> pd.DataFrame:
+    """Rename columns to a consistent format."""
+    return df.rename(columns=COLUMN_MAPPING)
+
 def normalize_fase(series: pd.Series) -> pd.Series:
     """Convert all Fase formats to int."""
     return (
@@ -9,13 +15,3 @@ def normalize_fase(series: pd.Series) -> pd.Series:
         .str.extract(r'^(\d+)')[0]
         .astype(int)
     )
-
-def load_and_clean(db) -> pd.DataFrame:
-    """Load all years and harmonize schema."""
-    dfs = []
-    for year in [2022, 2023, 2024]:
-        df = db.fetch_table(f'raw_data_{year}')
-        df['fase'] = normalize_fase(df['Fase'])
-        dfs.append(df)
-
-    return pd.concat(dfs, ignore_index=True)

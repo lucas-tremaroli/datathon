@@ -3,7 +3,7 @@ import streamlit as st
 
 from datathon.db import Database
 
-db = Database("data/raw/datathon.db")
+db = Database("data/duckdb/datathon.db")
 
 school_query = open("data/queries/school.sql").read()
 school_df = db.execute_query(school_query)
