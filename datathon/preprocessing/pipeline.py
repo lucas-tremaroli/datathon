@@ -13,7 +13,7 @@ def clean_and_store_refined_table(year: int, db: DuckDBClient) -> None:
     raw_data = db.fetch_table(f'raw.data_{year}')
 
     # Clean the data (e.g., rename columns)
-    cleaned_data = rename_columns(raw_data)
+    cleaned_data = rename_columns(year, raw_data)
 
     # Store the cleaned data back to the database
     with open('data/queries/create_refined_table.sql', 'r') as f:
