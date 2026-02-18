@@ -36,33 +36,21 @@ EDUCATION_INSTITUTION_ENCODING = {
     'Nenhuma das opções acima': 9,
 }
 
-# Column lists for type standardization
+# Column lists for type standardization (generic names for generalization)
 NUMERIC_COLUMNS = [
-    # 2022
-    'age_22_2022', 'inde_22_2022',
-    'iaa_2022', 'ieg_2022', 'ips_2022', 'ida_2022',
-    'math_2022', 'portuguese_2022', 'english_2022',
-    'ipv_2022', 'ian_2022', 'lag_2022',
-    # 2023
-    'age_2023', 'inde_2023', 'ipp_2023',
-    'iaa_2023', 'ieg_2023', 'ips_2023', 'ida_2023',
-    'math_2023', 'portuguese_2023', 'english_2023',
-    'ipv_2023', 'ian_2023', 'lag_2023',
-    # 2024
-    'age_2024', 'inde_2024', 'ipp_2024',
-    'iaa_2024', 'ieg_2024', 'ips_2024', 'ida_2024',
-    'math_2024', 'portuguese_2024', 'english_2024',
-    'ipv_2024', 'ian_2024', 'lag_2024',
+    'age', 'inde', 'ipp',
+    'iaa', 'ieg', 'ips', 'ida',
+    'math', 'portuguese', 'english',
+    'ipv', 'ian',
+    'lag_current', 'lag_next',
 ]
 
-STONE_COLUMNS = ['stone_22_2022', 'stone_2023', 'stone_2024']
+STONE_COLUMNS = ['stone']
 
 ENCODED_CATEGORICAL_COLUMNS = [
     'gender',
     'education_institution',
-    'stone_22_2022',
-    'stone_2023',
-    'stone_2024',
+    'stone',
 ]
 
 def rename_columns(year: int, df: pd.DataFrame) -> pd.DataFrame:
