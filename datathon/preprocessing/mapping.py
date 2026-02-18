@@ -37,7 +37,7 @@ COLUMN_MAPPING_2022 = {
     "IPV": "ipv_2022",
     "IAN": "ian_2022",
     "Fase ideal": "ideal_phase_2022",
-    "Defasagem": "lag_2022",
+    "Defas": "lag_2022",
     "Destaque IEG": "ieg_highlight_2022",
     "Destaque IDA": "ida_highlight_2022",
     "Destaque IPV": "ipv_highlight_2022",
@@ -147,4 +147,113 @@ COLUMN_MAPPING_2024 = {
     "Escola": "school_2024",
     "Ativo/ Inativo": "active_status_2024",
     "Ativo/ Inativo_1": "active_status_1_2024",
+}
+
+COLUMNS_TO_DROP_2022 = {
+    # Identifiers
+    "name_2022",
+    "birth_year_2022",
+    "admission_year_2022",
+    "num_av_2022",
+    "evaluator_1_2022",
+    "evaluator_2_2022",
+    "evaluator_3_2022",
+    "evaluator_4_2022",
+    # Target leakage
+    "ideal_phase_2022",
+    "phase_2022",
+    "indicated_2022",
+    "reached_cutoff_2022",
+    # Administrative
+    "class_2022",
+    # Free-text feedback
+    "evaluator_1_feedback_2022",
+    "evaluator_2_feedback_2022",
+    "evaluator_3_feedback_2022",
+    "evaluator_4_feedback_2022",
+    "psychology_feedback_2022",
+    "ieg_highlight_2022",
+    "ida_highlight_2022",
+    "ipv_highlight_2022",
+    # Redundant historical stones
+    "stone_20_2022",
+    "stone_21_2022",
+}
+
+COLUMNS_TO_DROP_2023 = {
+    # Identifiers
+    "anonymized_name_2023",
+    "birth_date_2023",
+    "admission_year_2023",
+    "num_av_2023",
+    "evaluator_1_2023",
+    "evaluator_2_2023",
+    "evaluator_3_2023",
+    "evaluator_4_2023",
+    # Target leakage
+    "ideal_phase_2023",
+    "phase_2023",
+    "indicated_2023",
+    "reached_cutoff_2023",
+    # Administrative
+    "class_2023",
+    # Free-text feedback
+    "evaluator_1_feedback_2023",
+    "evaluator_2_feedback_2023",
+    "evaluator_3_feedback_2023",
+    "evaluator_4_feedback_2023",
+    "psychology_feedback_2023",
+    # Sparse highlight flags
+    "ieg_highlight_2023",
+    "ida_highlight_2023",
+    "ipv_highlight_2023",
+    "ipv_highlight_1_2023",
+    # Redundant historical stones
+    "stone_20_2023",
+    "stone_21_2023",
+    "stone_22_2023",
+    "stone_23_2023",
+    # Redundant historical INDE
+    "inde_22_2023",
+    "inde_23_2023",
+}
+
+COLUMNS_TO_DROP_2024 = {
+    # Identifiers
+    "anonymized_name_2024",
+    "birth_date_2024",
+    "admission_year_2024",
+    "num_av_2024",
+    "evaluator_1_2024",
+    "evaluator_2_2024",
+    "evaluator_3_2024",
+    "evaluator_4_2024",
+    "evaluator_5_2024",
+    "evaluator_6_2024",
+    "active_status_2024",
+    "active_status_1_2024",
+    # Target leakage
+    "ideal_phase_2024",
+    "phase_2024",
+    "indicated_2024",
+    "reached_cutoff_2024",
+    # Administrative
+    "class_2024",
+    "school_2024",
+    # Free-text feedback
+    "evaluator_1_feedback_2024",
+    "evaluator_2_feedback_2024",
+    "psychology_feedback_2024",
+    # Sparse highlight flags
+    "ieg_highlight_2024",
+    "ida_highlight_2024",
+    "ipv_highlight_2024",
+    # Redundant historical stones
+    "stone_20_2024",
+    "stone_21_2024",
+    "stone_22_2024",
+    "stone_23_2024",
+    # Redundant historical INDE
+    "inde_22_2024",
+    "inde_23_2024",
 }

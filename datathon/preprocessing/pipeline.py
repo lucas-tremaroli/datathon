@@ -1,5 +1,10 @@
 from datathon.db import DuckDBClient
-from datathon.preprocessing.transformations import rename_columns
+from datathon.preprocessing.transformations import (
+    drop_columns,
+    rename_columns,
+    standardize_education_institution,
+    standardize_gender,
+)
 
 def clean_and_store_refined_table(year: int, db: DuckDBClient) -> None:
     """
@@ -12,8 +17,11 @@ def clean_and_store_refined_table(year: int, db: DuckDBClient) -> None:
     # Fetch the raw data for the specified year
     raw_data = db.fetch_table(f'raw.data_{year}')
 
-    # Clean the data (e.g., rename columns)
+    # Clean the data
     cleaned_data = rename_columns(year, raw_data)
+    cleaned_data = standardize_gender(year, cleaned_data)
+    cleaned_data = standardize_education_institution(year, cleaned_data)
+    cleaned_data = drop_columns(year, cleaned_data)
 
     # Store the cleaned data back to the database
     with open('data/queries/create_refined_table.sql', 'r') as f:
