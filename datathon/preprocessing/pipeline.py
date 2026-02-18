@@ -1,7 +1,10 @@
 from datathon.db import DuckDBClient
 from datathon.preprocessing.transformations import (
     drop_columns,
+    impute_nulls,
     rename_columns,
+    round_numeric_columns,
+    standardize_dtypes,
     standardize_education_institution,
     standardize_gender,
 )
@@ -39,9 +42,32 @@ def merge_refined_tables(db: DuckDBClient) -> None:
         merge_query = f.read()
         db.execute_query(merge_query)
 
+
+def prepare_students_for_training(db: DuckDBClient) -> None:
+    """
+    Prepares the refined.students table for ML training:
+    1. Standardize data types (convert to numeric, encode categoricals)
+    2. Impute null values (median for numeric, mode for categorical)
+    3. Round numeric columns to 2 decimal places
+
+    Arguments:
+        db: An instance of the Database class to interact with the database.
+    """
+    students = db.fetch_table('refined.students')
+    students = standardize_dtypes(students)
+    students = impute_nulls(students)
+    students = round_numeric_columns(students)
+    db.execute_query(
+        "CREATE OR REPLACE TABLE refined.students AS SELECT * FROM temp_table",
+        students
+    )
+
 def run_pipeline() -> None:
     """
     Runs the entire data preprocessing pipeline:
+    1. Clean and store refined tables for each year
+    2. Merge all refined tables into a single students table
+    3. Standardize data types and impute null values
     """
     with DuckDBClient('data/duckdb/datathon.db') as db:
         # Clean and store refined tables for each year
@@ -49,6 +75,8 @@ def run_pipeline() -> None:
             clean_and_store_refined_table(year, db)
         # Merge all refined tables into a single table
         merge_refined_tables(db)
+        # Standardize types and impute nulls
+        prepare_students_for_training(db)
 
 if __name__ == "__main__":
     run_pipeline()
