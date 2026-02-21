@@ -178,6 +178,8 @@ COLUMNS_TO_DROP_2022 = {
     # Redundant historical stones
     "stone_20_2022",
     "stone_21_2022",
+    # High null rate columns
+    "english_2022",
 }
 
 COLUMNS_TO_DROP_2023 = {
@@ -216,6 +218,9 @@ COLUMNS_TO_DROP_2023 = {
     # Redundant historical INDE
     "inde_22_2023",
     "inde_23_2023",
+    # High null rate columns
+    "english_2023",
+    "ipp_2023",
 }
 
 COLUMNS_TO_DROP_2024 = {
@@ -256,4 +261,7 @@ COLUMNS_TO_DROP_2024 = {
     # Redundant historical INDE
     "inde_22_2024",
     "inde_23_2024",
+    # High null rate columns
+    "english_2024",
+    "ipp_2024",
 }

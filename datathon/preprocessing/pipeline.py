@@ -1,12 +1,15 @@
 from datathon.db import DuckDBClient
 from datathon.preprocessing.transformations import (
+    detect_outliers_iqr,
     drop_columns,
     impute_nulls,
     rename_columns,
+    render_outlier_boxplots,
     round_numeric_columns,
     standardize_dtypes,
     standardize_education_institution,
     standardize_gender,
+    treat_outliers_iqr,
 )
 
 def clean_and_store_refined_table(year: int, db: DuckDBClient) -> None:
@@ -47,14 +50,24 @@ def prepare_students_for_training(db: DuckDBClient) -> None:
     """
     Prepares the refined.students table for ML training:
     1. Standardize data types (convert to numeric, encode categoricals)
-    2. Impute null values (median for numeric, mode for categorical)
-    3. Round numeric columns to 2 decimal places
+    2. Detect and report outliers using IQR method (before imputation)
+    3. Treat outliers using winsorization (before imputation)
+    4. Impute null values (median for numeric, mode for categorical)
+    5. Round numeric columns to 2 decimal places
 
     Arguments:
         db: An instance of the Database class to interact with the database.
     """
     students = db.fetch_table('refined.students')
     students = standardize_dtypes(students)
+
+    # Outlier detection, reporting, and treatment (BEFORE imputation)
+    # This ensures we analyze actual data distribution, not imputed values
+    outlier_report = detect_outliers_iqr(students)
+    print(outlier_report)
+    render_outlier_boxplots(students, outlier_report, output_dir="reports")
+    students = treat_outliers_iqr(students)
+
     students = impute_nulls(students)
     students = round_numeric_columns(students)
     db.execute_query(

@@ -14,10 +14,8 @@ SELECT
     d22.ida_2022 AS ida,
     d22.math_2022 AS math,
     d22.portuguese_2022 AS portuguese,
-    d22.english_2022 AS english,
     d22.ipv_2022 AS ipv,
     d22.ian_2022 AS ian,
-    NULL AS ipp,  -- IPP not available in 2022
     d22.lag_2022 AS lag_current,
     d23.lag_2023 AS lag_next
 FROM refined.data_2022 d22
@@ -39,10 +37,8 @@ SELECT
     d23.ida_2023 AS ida,
     d23.math_2023 AS math,
     d23.portuguese_2023 AS portuguese,
-    d23.english_2023 AS english,
     d23.ipv_2023 AS ipv,
     d23.ian_2023 AS ian,
-    d23.ipp_2023 AS ipp,
     d23.lag_2023 AS lag_current,
     d24.lag_2024 AS lag_next
 FROM refined.data_2023 d23
