@@ -1,4 +1,4 @@
-from datathon.db import DuckDBClient
+from datathon.database.client import DuckDBClient
 from datathon.preprocessing.transformations import (
     detect_outliers_iqr,
     drop_columns,
