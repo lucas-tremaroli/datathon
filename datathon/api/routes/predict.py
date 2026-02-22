@@ -1,33 +1,15 @@
-from pathlib import Path
-
 import pandas as pd
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter
 
+from datathon.api.util.model import get_model
 from datathon.api.models.predict import (
     PredictRequest,
     PredictResponse,
+    StudentFeatures,
     StudentPrediction,
 )
-from datathon.modeling.train import TrainedModel
 
 router = APIRouter(prefix="/api", tags=["predict"])
-
-MODEL_PATH = Path(__file__).parents[3] / "models" / "lag_worsening.pkl"
-
-_model: TrainedModel | None = None
-
-
-def get_model() -> TrainedModel:
-    """Load the trained model (cached)."""
-    global _model
-    if _model is None:
-        if not MODEL_PATH.exists():
-            raise HTTPException(
-                status_code=503,
-                detail="Model not available. Please train the model first.",
-            )
-        _model = TrainedModel.load(MODEL_PATH)
-    return _model
 
 
 @router.post("/predict", response_model=PredictResponse)
@@ -50,3 +32,18 @@ async def predict(request: PredictRequest) -> PredictResponse:
             for pred, prob in zip(predictions, probabilities)
         ]
     )
+
+
+@router.post("/predict/single", response_model=StudentPrediction)
+async def predict_single(student: StudentFeatures) -> StudentPrediction:
+    """
+    Predict whether a single student's lag will worsen.
+    """
+    model = get_model()
+
+    df = pd.DataFrame([student.model_dump()])
+
+    probability = float(model.predict_proba(df)[0])
+    will_worsen = bool(model.predict(df)[0])
+
+    return StudentPrediction(will_worsen=will_worsen, probability=probability)
