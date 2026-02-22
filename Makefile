@@ -1,4 +1,4 @@
-.PHONY: db kernel api preprocess train
+.PHONY: db kernel api preprocess train test
 
 db:
 	duckdb data/duckdb/datathon.db -readonly
@@ -14,3 +14,6 @@ preprocess:
 
 train:
 	uv run python -m datathon.modeling.train
+
+test:
+	uv run pytest tests/ -v
