@@ -1,4 +1,4 @@
-.PHONY: db kernel api
+.PHONY: db kernel api preprocess train
 
 db:
 	duckdb data/duckdb/datathon.db -readonly
@@ -8,3 +8,9 @@ kernel:
 
 api:
 	uv run uvicorn datathon.api.main:app --host 0.0.0.0 --port 8000
+
+preprocess:
+	uv run python -m datathon.preprocessing.pipeline
+
+train:
+	uv run python -m datathon.modeling.train
