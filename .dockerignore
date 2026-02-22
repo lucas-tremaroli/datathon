@@ -1,0 +1,13 @@
+.git
+.gitignore
+.venv
+.pytest_cache
+.ropeproject
+.pace
+.DS_Store
+__pycache__
+*.pyc
+data/
+reports/
+tests/
+Makefile

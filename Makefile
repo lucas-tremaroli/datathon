@@ -1,4 +1,4 @@
-.PHONY: db kernel api preprocess train test
+.PHONY: db kernel api preprocess train test up down logs
 
 db:
 	duckdb data/duckdb/datathon.db -readonly
@@ -17,3 +17,12 @@ train:
 
 test:
 	uv run pytest tests/ -v
+
+up:
+	docker compose up --build --detach
+
+down:
+	docker compose down
+
+logs:
+	docker logs -f datathon-api
