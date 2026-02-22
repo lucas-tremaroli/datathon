@@ -1,14 +1,14 @@
 from fastapi import APIRouter
 
 from datathon.api.util.model import get_model
-from datathon.api.models.info import (
+from datathon.api.models.model import (
     FeatureImportance,
     ModelInfoResponse,
     ModelMetricsResponse,
 )
 from datathon.modeling.train import get_feature_importance
 
-router = APIRouter(prefix="/api", tags=["info"])
+router = APIRouter(prefix="/api", tags=["model"])
 
 
 @router.get("/model/info", response_model=ModelInfoResponse)
