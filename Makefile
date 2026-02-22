@@ -1,4 +1,4 @@
-.PHONY: db kernel api preprocess train test up down logs
+.PHONY: db kernel api preprocess train test up down logs examples
 
 db:
 	duckdb data/duckdb/datathon.db -readonly
@@ -26,3 +26,6 @@ down:
 
 logs:
 	docker logs -f datathon-api
+
+examples:
+	./scripts/api_examples.sh
