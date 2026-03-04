@@ -3,6 +3,7 @@ import logging
 from fastapi import APIRouter
 
 from datathon.api.models.model import (
+    DriftResponse,
     FeatureImportance,
     ModelInfoResponse,
     ModelMetricsResponse,
@@ -44,3 +45,24 @@ async def model_info() -> ModelInfoResponse:
         feature_importance=feature_importance,
         metrics=metrics,
     )
+
+
+@router.get("/model/drift", response_model=DriftResponse)
+async def model_drift() -> DriftResponse:
+    """
+    Get drift detection status based on incoming prediction data vs training baseline.
+    """
+    import datathon.api.util.metrics as m
+
+    # Ensure model is loaded (initializes drift monitor)
+    get_model()
+
+    if m.drift_monitor is None:
+        return DriftResponse(
+            status="no_data",
+            sample_count=0,
+            features={},
+        )
+
+    result = m.drift_monitor.compute_drift()
+    return DriftResponse(**result)

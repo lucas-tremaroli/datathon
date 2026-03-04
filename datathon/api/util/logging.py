@@ -34,7 +34,8 @@ class RequestLoggingMiddleware(BaseHTTPMiddleware):
 
         response = await call_next(request)
 
-        elapsed_ms = (time.perf_counter() - start) * 1000
+        elapsed = time.perf_counter() - start
+        elapsed_ms = elapsed * 1000
         logger.info(
             "%s %s -> %d (%.1fms)",
             request.method,
@@ -42,5 +43,12 @@ class RequestLoggingMiddleware(BaseHTTPMiddleware):
             response.status_code,
             elapsed_ms,
         )
+
+        from datathon.api.util.metrics import REQUEST_DURATION
+        REQUEST_DURATION.labels(
+            method=request.method,
+            path=request.url.path,
+            status=response.status_code,
+        ).observe(elapsed)
 
         return response

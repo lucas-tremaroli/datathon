@@ -29,4 +29,26 @@ def get_model() -> TrainedModel:
             len(_model.feature_columns),
             _model.metrics.f1,
         )
+        _init_metrics(_model)
     return _model
+
+
+def _init_metrics(model: TrainedModel) -> None:
+    """Set Prometheus model info and initialize drift monitor."""
+    import datathon.api.util.metrics as m
+
+    m.MODEL_INFO.info({
+        "f1": f"{model.metrics.f1:.4f}",
+        "accuracy": f"{model.metrics.accuracy:.4f}",
+        "precision": f"{model.metrics.precision:.4f}",
+        "recall": f"{model.metrics.recall:.4f}",
+        "auc_roc": f"{model.metrics.auc_roc:.4f}",
+        "features": str(len(model.feature_columns)),
+    })
+
+    baselines = model.feature_baselines
+    if baselines:
+        m.drift_monitor = m.DriftMonitor(baselines)
+        logger.info("Drift monitor initialized with %d feature baselines", len(baselines))
+    else:
+        logger.warning("No feature baselines in model artifact; drift monitoring disabled")

@@ -29,3 +29,12 @@ class ModelInfoResponse(BaseModel):
     feature_columns: list[str]
     feature_importance: list[FeatureImportance]
     metrics: ModelMetricsResponse
+
+
+class DriftResponse(BaseModel):
+    """
+    Response model for the drift detection endpoint.
+    """
+    status: str
+    sample_count: int
+    features: dict[str, float]

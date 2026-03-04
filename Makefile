@@ -13,7 +13,7 @@ preprocess:
 	uv run python -m datathon.preprocessing.pipeline
 
 train:
-	uv run python -m datathon.modeling.train
+	uv run python -m datathon.modeling
 
 test:
 	uv run pytest tests/ -v

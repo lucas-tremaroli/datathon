@@ -9,6 +9,7 @@ dependencies = [
     "fastapi[standard]>=0.129.2",
     "matplotlib>=3.10.0",
     "pandas>=2.2.0",
+    "prometheus-client>=0.21.0",
     "scikit-learn>=1.8.0",
     "streamlit>=1.41.0",
 ]
