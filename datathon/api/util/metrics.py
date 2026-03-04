@@ -97,6 +97,7 @@ class DriftMonitor:
         """
         with self._lock:
             buffers_snapshot = {k: list(v) for k, v in self._buffers.items()}
+            self._buffers = {name: [] for name in self._baselines}
 
         if not buffers_snapshot or not any(buffers_snapshot.values()):
             return {
@@ -111,7 +112,7 @@ class DriftMonitor:
 
         for name, baseline in self._baselines.items():
             values = buffers_snapshot.get(name, [])
-            if len(values) < 10:
+            if len(values) < 50:
                 continue
 
             observed_counts, _ = np.histogram(values, bins=baseline.bin_edges)
