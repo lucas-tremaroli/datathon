@@ -1,4 +1,4 @@
-.PHONY: db kernel api preprocess train test up down logs examples
+.PHONY: db kernel api preprocess train test up down logs examples test-drift
 
 db:
 	duckdb data/duckdb/datathon.db -readonly
@@ -29,3 +29,6 @@ logs:
 
 examples:
 	./scripts/api_examples.sh
+
+test-drift:
+	./scripts/test_drift.sh
