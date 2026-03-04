@@ -1,13 +1,17 @@
+import logging
+
 import pandas as pd
 from fastapi import APIRouter
 
-from datathon.api.util.model import get_model
 from datathon.api.models.predict import (
     PredictRequest,
     PredictResponse,
     StudentFeatures,
     StudentPrediction,
 )
+from datathon.api.util.model import get_model
+
+logger = logging.getLogger("datathon.api.predict")
 
 router = APIRouter(prefix="/api", tags=["predict"])
 
@@ -22,9 +26,17 @@ async def predict(request: PredictRequest) -> PredictResponse:
     model = get_model()
 
     df = pd.DataFrame([s.model_dump() for s in request.students])
+    logger.info("Batch prediction request: %d students", len(df))
 
     probabilities = model.predict_proba(df)
     predictions = model.predict(df)
+
+    worsen_count = int(predictions.sum())
+    logger.info(
+        "Batch prediction result: %d/%d predicted to worsen",
+        worsen_count,
+        len(predictions),
+    )
 
     return PredictResponse(
         predictions=[
@@ -42,8 +54,15 @@ async def predict_single(student: StudentFeatures) -> StudentPrediction:
     model = get_model()
 
     df = pd.DataFrame([student.model_dump()])
+    logger.info("Single prediction request: %s", student.model_dump())
 
     probability = float(model.predict_proba(df)[0])
     will_worsen = bool(model.predict(df)[0])
+
+    logger.info(
+        "Single prediction result: will_worsen=%s, probability=%.4f",
+        will_worsen,
+        probability,
+    )
 
     return StudentPrediction(will_worsen=will_worsen, probability=probability)

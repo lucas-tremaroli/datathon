@@ -1,12 +1,16 @@
+import logging
+
 from fastapi import APIRouter
 
-from datathon.api.util.model import get_model
 from datathon.api.models.model import (
     FeatureImportance,
     ModelInfoResponse,
     ModelMetricsResponse,
 )
+from datathon.api.util.model import get_model
 from datathon.modeling.train import get_feature_importance
+
+logger = logging.getLogger("datathon.api.model")
 
 router = APIRouter(prefix="/api", tags=["model"])
 
@@ -17,6 +21,7 @@ async def model_info() -> ModelInfoResponse:
     Get model information including metrics and feature importance.
     """
     model = get_model()
+    logger.info("Model info requested")
 
     importance_df = get_feature_importance(model)
     feature_importance = [
