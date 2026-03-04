@@ -1,0 +1,11 @@
+services:
+  api:
+    container_name: datathon-api
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./datathon:/app/datathon
+      - ./models:/app/models
+    environment:
+      - PYTHONDONTWRITEBYTECODE=1

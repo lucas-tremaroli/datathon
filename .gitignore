@@ -9,3 +9,6 @@ wheels/
 # Virtual environments
 .venv
 .pace/
+
+# Tests and coverage reports
+.coverage

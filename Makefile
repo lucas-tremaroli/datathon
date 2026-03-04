@@ -1,4 +1,4 @@
-.PHONY: db kernel dash
+.PHONY: db kernel api preprocess train test up down logs examples
 
 db:
 	duckdb data/duckdb/datathon.db -readonly
@@ -6,5 +6,26 @@ db:
 kernel:
 	uv run python -m ipykernel install --user --name datathon
 
-dash:
-	uv run streamlit run datathon/dashboard/main.py
+api:
+	uv run uvicorn datathon.api.main:app --host 0.0.0.0 --port 8000
+
+preprocess:
+	uv run python -m datathon.preprocessing.pipeline
+
+train:
+	uv run python -m datathon.modeling
+
+test:
+	uv run pytest tests/ -v
+
+up:
+	docker compose up --build --detach
+
+down:
+	docker compose down
+
+logs:
+	docker logs -f datathon-api
+
+examples:
+	./scripts/api_examples.sh

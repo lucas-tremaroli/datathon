@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 import pickle
 
@@ -24,6 +24,21 @@ FEATURE_COLUMNS = [
 
 
 @dataclass
+class FeatureBaseline:
+    """Baseline distribution statistics for a single feature."""
+
+    mean: float
+    std: float
+    min: float
+    max: float
+    q25: float
+    q50: float
+    q75: float
+    bin_edges: np.ndarray
+    bin_counts: np.ndarray
+
+
+@dataclass
 class ModelMetrics:
     """Evaluation metrics."""
 
@@ -44,12 +59,19 @@ class TrainedModel:
     scaler: StandardScaler
     feature_columns: list[str]
     metrics: ModelMetrics
+    feature_baselines: dict[str, FeatureBaseline] = field(default_factory=dict)
+
+    def __getattr__(self, name: str):
+        if name == "feature_baselines":
+            return {}
+        raise AttributeError(f"'{type(self).__name__}' has no attribute '{name}'")
 
     def predict_proba(self, df: pd.DataFrame) -> np.ndarray:
         """Predict probability of lag worsening."""
         X = df[self.feature_columns].fillna(df[self.feature_columns].median())
         X_scaled = self.scaler.transform(X)
-        return self.model.predict_proba(X_scaled)[:, 1]
+        proba: np.ndarray = self.model.predict_proba(X_scaled)
+        return proba[:, 1]
 
     def predict(self, df: pd.DataFrame, threshold: float = 0.5) -> np.ndarray:
         """Predict binary outcome."""
@@ -89,6 +111,23 @@ def train(df: pd.DataFrame, test_size: float = 0.2, random_state: int = 42) -> T
     X = df[FEATURE_COLUMNS].fillna(df[FEATURE_COLUMNS].median())
     y = (df['lag_next'] > df['lag_current']).astype(int)
 
+    # Compute baseline distributions before scaling
+    feature_baselines: dict[str, FeatureBaseline] = {}
+    for col in FEATURE_COLUMNS:
+        values = X[col].dropna().values
+        counts, edges = np.histogram(values, bins=10)
+        feature_baselines[col] = FeatureBaseline(
+            mean=float(np.mean(values)),
+            std=float(np.std(values)),
+            min=float(np.min(values)),
+            max=float(np.max(values)),
+            q25=float(np.percentile(values, 25)),
+            q50=float(np.percentile(values, 50)),
+            q75=float(np.percentile(values, 75)),
+            bin_edges=edges,
+            bin_counts=counts,
+        )
+
     # Scale
     scaler = StandardScaler()
     X_scaled = scaler.fit_transform(X)
@@ -111,20 +150,21 @@ def train(df: pd.DataFrame, test_size: float = 0.2, random_state: int = 42) -> T
 
     # Evaluate
     y_pred = model.predict(X_test)
-    y_proba = model.predict_proba(X_test)[:, 1]
+    y_proba: np.ndarray = model.predict_proba(X_test)
+    y_proba = y_proba[:, 1]
 
     # Cross-validation
     cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=random_state)
     cv_scores = cross_val_score(model, X_scaled, y, cv=cv, scoring='f1')
 
     metrics = ModelMetrics(
-        accuracy=accuracy_score(y_test, y_pred),
-        precision=precision_score(y_test, y_pred),
-        recall=recall_score(y_test, y_pred),
-        f1=f1_score(y_test, y_pred),
-        auc_roc=roc_auc_score(y_test, y_proba),
-        cv_f1_mean=cv_scores.mean(),
-        cv_f1_std=cv_scores.std(),
+        accuracy=float(accuracy_score(y_test, y_pred)),
+        precision=float(precision_score(y_test, y_pred)),
+        recall=float(recall_score(y_test, y_pred)),
+        f1=float(f1_score(y_test, y_pred)),
+        auc_roc=float(roc_auc_score(y_test, y_proba)),
+        cv_f1_mean=float(cv_scores.mean()),
+        cv_f1_std=float(cv_scores.std()),
     )
 
     return TrainedModel(
@@ -132,6 +172,7 @@ def train(df: pd.DataFrame, test_size: float = 0.2, random_state: int = 42) -> T
         scaler=scaler,
         feature_columns=FEATURE_COLUMNS,
         metrics=metrics,
+        feature_baselines=feature_baselines,
     )
 
 
