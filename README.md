@@ -1,3 +1,5 @@
+[![Tests](https://github.com/lucas-tremaroli/datathon/actions/workflows/tests.yml/badge.svg)](https://github.com/lucas-tremaroli/datathon/actions/workflows/tests.yml)
+
 # Datathon - Passos Mágicos: Predição de Defasagem Escolar
 
 ## Visão Geral do Projeto
@@ -129,13 +131,31 @@ make down
 | `make api` | Inicia a API localmente (porta 8000) |
 | `make preprocess` | Executa o pipeline de pré-processamento |
 | `make train` | Treina o modelo de classificação |
-| `make test` | Executa os testes automatizados |
+| `make test` | Executa os testes automatizados com cobertura |
 | `make up` | Sobe o container Docker |
 | `make down` | Para o container Docker |
 | `make logs` | Exibe logs do container |
 | `make examples` | Executa exemplos de chamadas à API |
 | `make test-drift` | Testa a detecção de drift (requer API rodando) |
 | `make db` | Abre o DuckDB em modo leitura |
+
+## Testes
+
+O projeto usa **pytest** com cobertura mínima de 80%. Os testes são executados automaticamente via GitHub Actions em pull requests e por workflow dispatch.
+
+```bash
+# Executar testes
+make test
+
+# Executar com relatório de cobertura
+uv run pytest --cov=datathon --cov-report=term-missing
+```
+
+Os testes cobrem:
+- **API**: endpoints, validação de payloads, schemas Pydantic
+- **Preprocessing**: limpeza, encoding, imputação, detecção/tratamento de outliers
+- **Modeling**: treinamento, avaliação, baseline, serialização do modelo
+- **Database**: cliente DuckDB, queries, tabelas temporárias
 
 ## Exemplos de Chamadas à API
 

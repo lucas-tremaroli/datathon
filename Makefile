@@ -16,7 +16,7 @@ train:
 	uv run python -m datathon.modeling
 
 test:
-	uv run pytest tests/ -v
+	uv run pytest --cov=datathon --cov-report=term-missing -q
 
 up:
 	docker compose up --build --detach
